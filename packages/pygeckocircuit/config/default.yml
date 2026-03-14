@@ -1,0 +1,32 @@
+# PyGeckoCIRCUITS default configuration
+# ─────────────────────────────────────
+
+app:
+  name: PyGeckoCIRCUITS
+  version: 1.0.0
+  debug: false
+
+# GeckoCIRCUITS backend (Spring Boot REST API on Win11)
+gecko:
+  base_url: "http://172.31.64.1:8080/gecko"
+  jar_path: "C:\\Users\\tinix\\Downloads\\GeckoCIRCUITS\\gecko-rest-api-1.0.0.jar"
+  auto_launch: true
+  timeout: 120
+  poll_interval: 0.5
+  max_wait_startup: 30
+
+# FastAPI sync proxy
+api:
+  host: "0.0.0.0"
+  port: 8082
+  prefix: /api/v1
+  docs:
+    enabled: true
+    swagger_ui: true
+
+# Logging
+logging:
+  level: INFO
+  file:
+    enabled: true
+    path: ./logs/pygeckocircuit.log

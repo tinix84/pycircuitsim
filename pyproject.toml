@@ -1,0 +1,11 @@
+# Workspace-level config (tooling only, not a package itself)
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["packages/*/tests"]
