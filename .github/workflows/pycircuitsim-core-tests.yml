@@ -1,0 +1,36 @@
+name: pycircuitsim-core tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/pycircuitsim-core/**"
+      - ".github/workflows/pycircuitsim-core-tests.yml"
+  pull_request:
+    paths:
+      - "packages/pycircuitsim-core/**"
+      - ".github/workflows/pycircuitsim-core-tests.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+          pip install -e packages/pycircuitsim-core
+
+      - name: Run pycircuitsim-core tests
+        run: python -m pytest packages/pycircuitsim-core/tests/ -v
