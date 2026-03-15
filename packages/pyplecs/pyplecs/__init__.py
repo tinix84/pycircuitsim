@@ -75,6 +75,22 @@ try:
 except ImportError:
     OptimizationEngine = None
 
+# Mission profile tools
+try:
+    from .mission_profile import (
+        WeightedOPTable,
+        mission_profile_to_histogram,
+        pv_mppt,
+        obc_profile,
+        wltp_to_electrical,
+    )
+except ImportError:
+    WeightedOPTable = None
+    mission_profile_to_histogram = None
+    pv_mppt = None
+    obc_profile = None
+    wltp_to_electrical = None
+
 print(f"PyPLECS v{__version__} - Advanced PLECS Simulation Automation")
 if not _legacy_available:
     print("Note: Legacy PLECS GUI automation not available (missing pywinauto)")
@@ -109,4 +125,10 @@ __all__ = [
     "create_web_app",
     "create_mcp_server",
     "OptimizationEngine",
+    # Mission profile
+    "WeightedOPTable",
+    "mission_profile_to_histogram",
+    "pv_mppt",
+    "obc_profile",
+    "wltp_to_electrical",
 ]
