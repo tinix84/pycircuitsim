@@ -33,19 +33,41 @@ except ImportError:
     PlecsApp = None
     _legacy_available = False
 
-# New architecture imports
-from .cache import SimulationCache
-from .config import get_config, init_config
-from .core import (
-    ComponentParameter,
-    # ModelVariant removed in v1.0.0
-    OptimizationRequest,
-    OptimizationResult,
-    SimulationRequest,
-    SimulationResult,
-    SimulationStatus,
-)
-from .orchestration import SimulationOrchestrator, TaskPriority
+# New architecture imports (guarded — cache/ is gitignored, may be absent on fresh checkout)
+try:
+    from .cache import SimulationCache
+except ImportError:
+    SimulationCache = None
+
+try:
+    from .config import get_config, init_config
+except ImportError:
+    get_config = None
+    init_config = None
+
+try:
+    from .core import (
+        ComponentParameter,
+        # ModelVariant removed in v1.0.0
+        OptimizationRequest,
+        OptimizationResult,
+        SimulationRequest,
+        SimulationResult,
+        SimulationStatus,
+    )
+except ImportError:
+    ComponentParameter = None
+    OptimizationRequest = None
+    OptimizationResult = None
+    SimulationRequest = None
+    SimulationResult = None
+    SimulationStatus = None
+
+try:
+    from .orchestration import SimulationOrchestrator, TaskPriority
+except ImportError:
+    SimulationOrchestrator = None
+    TaskPriority = None
 
 # Optional logging (requires structlog)
 try:
@@ -74,6 +96,22 @@ try:
     from .optimizer import OptimizationEngine
 except ImportError:
     OptimizationEngine = None
+
+# Mission profile tools
+try:
+    from .mission_profile import (
+        WeightedOPTable,
+        mission_profile_to_histogram,
+        pv_mppt,
+        obc_profile,
+        wltp_to_electrical,
+    )
+except ImportError:
+    WeightedOPTable = None
+    mission_profile_to_histogram = None
+    pv_mppt = None
+    obc_profile = None
+    wltp_to_electrical = None
 
 print(f"PyPLECS v{__version__} - Advanced PLECS Simulation Automation")
 if not _legacy_available:
@@ -109,4 +147,10 @@ __all__ = [
     "create_web_app",
     "create_mcp_server",
     "OptimizationEngine",
+    # Mission profile
+    "WeightedOPTable",
+    "mission_profile_to_histogram",
+    "pv_mppt",
+    "obc_profile",
+    "wltp_to_electrical",
 ]

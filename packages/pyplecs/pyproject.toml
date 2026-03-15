@@ -19,9 +19,14 @@ dependencies = [
     "pydantic>=2.0",
 ]
 
+[tool.setuptools.packages.find]
+include = ["pyplecs*"]
+
 [tool.setuptools]
-packages = ["pyplecs"]
 include-package-data = true
+
+[tool.setuptools.package-data]
+"pyplecs.mission_profile.data" = ["*.csv"]
 
 [project.scripts]
 pyplecs-setup = "pyplecs.cli.installer:main"
