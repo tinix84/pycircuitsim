@@ -71,6 +71,11 @@ def mission_profile_to_histogram(
         elif method == "equal_count":
             quantiles = np.linspace(0, 100, n_bins_list[i] + 1)
             edges = np.unique(np.percentile(sample[:, i], quantiles))
+            # Fallback: if data is constant/near-constant, unique collapses to <2 edges
+            if len(edges) < 2:
+                lo = edges[0] - 0.5
+                hi = edges[0] + 0.5
+                edges = np.linspace(lo, hi, n_bins_list[i] + 1)
             edges_list.append(edges)
         else:
             raise ValueError(f"Unknown method: {method!r}")

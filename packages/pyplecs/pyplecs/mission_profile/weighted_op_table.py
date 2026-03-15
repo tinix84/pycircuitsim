@@ -65,10 +65,18 @@ class WeightedOPTable:
         if ax is None:
             _, ax = plt.subplots()
 
-        dims = [c for c in self.data.columns if c not in ("weight_pct", "P", "count")]
+        dims = self.dimensions if self.dimensions else [
+            c for c in self.data.columns if c not in ("weight_pct", "P", "count")
+        ]
 
         if kind == "auto":
-            kind = "heatmap" if len(dims) >= 2 else "bar"
+            kind = "heatmap" if len(dims) == 2 else "bar"
+
+        if kind == "heatmap" and len(dims) != 2:
+            raise ValueError(
+                f"Heatmap requires exactly 2 dimensions, got {len(dims)}: {dims}. "
+                "Use kind='bar' or select 2 dimensions."
+            )
 
         if kind == "bar":
             labels = self.data[dims].astype(str).agg(" / ".join, axis=1)

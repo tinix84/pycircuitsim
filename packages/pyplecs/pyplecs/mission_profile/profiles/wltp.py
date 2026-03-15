@@ -97,8 +97,8 @@ def wltp_to_electrical(
 
     P_mech = F_total * v_ms  # [W]
 
-    # Electrical side
-    P_elec = P_mech / motor.efficiency
+    # Electrical side (sign-aware efficiency: divide when motoring, multiply when regen)
+    P_elec = np.where(P_mech >= 0, P_mech / motor.efficiency, P_mech * motor.efficiency)
     V_dc = np.full_like(P_mech, motor.V_dc)
     I_dc = P_elec / motor.V_dc
 

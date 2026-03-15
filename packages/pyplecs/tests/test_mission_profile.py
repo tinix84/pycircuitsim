@@ -66,6 +66,12 @@ class TestWeightedOPTable:
         tbl = WeightedOPTable(data=df, dimensions=["V"])
         assert "n_ops=1" in repr(tbl)
 
+    def test_heatmap_rejects_3d(self):
+        df = pd.DataFrame({"V": [1], "I": [2], "T": [3], "weight_pct": [100.0]})
+        tbl = WeightedOPTable(data=df, dimensions=["V", "I", "T"])
+        with pytest.raises(ValueError, match="exactly 2 dimensions"):
+            tbl.plot(kind="heatmap")
+
 
 # ── mission_profile_to_histogram ─────────────────────────────────────
 
@@ -135,6 +141,12 @@ class TestHistogram:
     def test_constant_column(self):
         df = pd.DataFrame({"V": [400.0] * 100})
         tbl = mission_profile_to_histogram(df, columns=["V"], n_bins=5)
+        assert len(tbl) >= 1
+        assert abs(tbl.data["weight_pct"].sum() - 100.0) < 1e-9
+
+    def test_equal_count_constant_data(self):
+        df = pd.DataFrame({"V": [42.0] * 50})
+        tbl = mission_profile_to_histogram(df, columns=["V"], n_bins=5, method="equal_count")
         assert len(tbl) >= 1
         assert abs(tbl.data["weight_pct"].sum() - 100.0) < 1e-9
 
@@ -235,6 +247,16 @@ class TestWLTP:
             motor=MotorParams(V_dc=800),
         )
         assert np.all(result["V"] == 800.0)
+
+    def test_regen_efficiency(self):
+        """Regen (deceleration) should reduce electrical power magnitude vs mechanical."""
+        result = wltp_to_electrical(wltp_class=3)
+        regen_mask = result["P_mech"] < 0
+        if regen_mask.any():
+            # |P_elec| < |P_mech| during regen (energy lost to inefficiency)
+            P_elec = result.loc[regen_mask, "I"] * result.loc[regen_mask, "V"]
+            P_mech = result.loc[regen_mask, "P_mech"]
+            assert np.all(np.abs(P_elec.values) <= np.abs(P_mech.values) + 1e-6)
 
 
 # ── End-to-end: profile → histogram ─────────────────────────────────
