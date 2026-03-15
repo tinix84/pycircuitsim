@@ -31,10 +31,12 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest
+          pip install pytest matplotlib
           pip install -e packages/pycircuitsim-core
           pip install -e packages/pyplecs
 
-      - name: Run pyplecs tests
-        working-directory: packages/pyplecs
-        run: python -m pytest tests/test_mission_profile.py -v
+      - name: Run pyplecs mission_profile tests
+        run: python -m pytest packages/pyplecs/tests/test_mission_profile.py -v
+        env:
+          # Avoid importing from local source tree
+          PYTHONDONTWRITEBYTECODE: 1

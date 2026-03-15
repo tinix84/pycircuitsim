@@ -33,19 +33,41 @@ except ImportError:
     PlecsApp = None
     _legacy_available = False
 
-# New architecture imports
-from .cache import SimulationCache
-from .config import get_config, init_config
-from .core import (
-    ComponentParameter,
-    # ModelVariant removed in v1.0.0
-    OptimizationRequest,
-    OptimizationResult,
-    SimulationRequest,
-    SimulationResult,
-    SimulationStatus,
-)
-from .orchestration import SimulationOrchestrator, TaskPriority
+# New architecture imports (guarded — cache/ is gitignored, may be absent on fresh checkout)
+try:
+    from .cache import SimulationCache
+except ImportError:
+    SimulationCache = None
+
+try:
+    from .config import get_config, init_config
+except ImportError:
+    get_config = None
+    init_config = None
+
+try:
+    from .core import (
+        ComponentParameter,
+        # ModelVariant removed in v1.0.0
+        OptimizationRequest,
+        OptimizationResult,
+        SimulationRequest,
+        SimulationResult,
+        SimulationStatus,
+    )
+except ImportError:
+    ComponentParameter = None
+    OptimizationRequest = None
+    OptimizationResult = None
+    SimulationRequest = None
+    SimulationResult = None
+    SimulationStatus = None
+
+try:
+    from .orchestration import SimulationOrchestrator, TaskPriority
+except ImportError:
+    SimulationOrchestrator = None
+    TaskPriority = None
 
 # Optional logging (requires structlog)
 try:
