@@ -19,22 +19,10 @@ dependencies = [
     "pydantic>=2.0",
 ]
 
+[tool.setuptools.packages.find]
+include = ["pyplecs*"]
+
 [tool.setuptools]
-packages = [
-    "pyplecs",
-    "pyplecs.core",
-    "pyplecs.cache",
-    "pyplecs.orchestration",
-    "pyplecs.api",
-    "pyplecs.logging",
-    "pyplecs.webgui",
-    "pyplecs.optimizer",
-    "pyplecs.mcp",
-    "pyplecs.cli",
-    "pyplecs.mission_profile",
-    "pyplecs.mission_profile.profiles",
-    "pyplecs.mission_profile.data",
-]
 include-package-data = true
 
 [tool.setuptools.package-data]
